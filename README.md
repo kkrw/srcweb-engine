@@ -11,3 +11,12 @@ Visual Basic 5.0 で開発された「SRC (Simulation RPG Construction)」を、
 * **Original Software:** SRC (Simulation RPG Construction)
 * **Original Authors:** Kei Sakamoto, Inui Tetsuyuki
 * **Original License:** GNU General Public License v3.0
+
+## 開発環境
+
+- node.js をインストール
+
+### backend 開発
+
+* backend に移動する
+* ./venv/Scripts/activate を実行する
