@@ -1,11 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+// 開発環境でのみインポート
+const isDevelopment = import.meta.env.DEV;
+
+// StrictMode による再マウントでもテストが1回だけ実行されるように
+// グローバル変数で管理（コンポーネントインスタンス間で共有）
+let testsExecuted = false;
+
 function App() {
   const [count, setCount] = useState(0)
   const [healthStatus, setHealthStatus] = useState('')
+  const [testStatus, setTestStatus] = useState('Tests not run yet')
 
   const checkHealth = async () => {
     try {
@@ -16,6 +24,30 @@ function App() {
       setHealthStatus('API Error' + error)
     }
   }
+
+  // 開発環境でIndexedDBテストを自動実行
+  // StrictModeによる再マウントでも1回だけ実行されるようグローバル変数を使用
+  useEffect(() => {
+    if (isDevelopment && !testsExecuted) {
+      testsExecuted = true
+      console.log('Running IndexedDB manual tests in development mode...');
+      setTestStatus('Running tests...');
+
+      // 動的にテストをインポートして実行
+      import('./db/__tests__/manual-test')
+        .then((testModule) => {
+          return testModule.runAllTests();
+        })
+        .then(() => {
+          setTestStatus('✅ Tests completed! Check console for details.');
+          console.log('%cTests completed successfully!', 'color: green; font-weight: bold');
+        })
+        .catch((error) => {
+          setTestStatus('❌ Tests failed! Check console for details.');
+          console.error('Test execution failed:', error);
+        });
+    }
+  }, []); // 空の依存配列で、マウント時のみ実行
 
   return (
     <>
@@ -36,6 +68,11 @@ function App() {
           Check API Health
         </button>
         <p>{healthStatus}</p>
+        {isDevelopment && (
+          <div style={{ marginTop: '20px', padding: '10px', background: '#f0f0f0', borderRadius: '5px' }}>
+            <strong>IndexedDB Tests:</strong> {testStatus}
+          </div>
+        )}
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>

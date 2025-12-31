@@ -14,9 +14,17 @@ Visual Basic 5.0 で開発された「SRC (Simulation RPG Construction)」を、
 
 ## 開発環境
 
+- Python3 をインストール
 - node.js をインストール
+- backend に移動して python -m venv venv
+- frontend に移動して npm install
 
 ### backend 開発
 
-* backend に移動する
-* ./venv/Scripts/activate を実行する
+- backend に移動する
+- ./venv/Scripts/activate を実行する
+
+### frontend 開発
+
+- frontend に移動する
+- npm run dev
